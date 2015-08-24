@@ -1,13 +1,8 @@
 import mechanize
-import cookielib
 import getpass
 
 # Browser
 br = mechanize.Browser()
-
-# Cookie Jar
-cj = cookielib.LWPCookieJar()
-br.set_cookiejar(cj)
 
 # Browser options
 br.set_handle_equiv(True)
@@ -34,11 +29,12 @@ br.submit()
 r=br.open("https://courses.iitm.ac.in/course/view.php?id=1783")
     
 # Open the most recent attendance link
-br.follow_link(nr=0)
-#br.follow_link(nr=0)
-br.open('https://courses.iitm.ac.in/mod/questionnaire/complete.php?id=8600')
+for item in br.links():
+    if 'Attend' in str(item):
+        br.open(item.url)
+        break
+
 br.select_form(nr=0)
 br.form['q807']=['y']
 br.submit()
-br.reload()
 print 'Successfully put attendance! :)'
